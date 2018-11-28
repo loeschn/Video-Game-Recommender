@@ -18,12 +18,6 @@ def api_request(url, params=None):
 def api_endpoint(endpoint="", endpoint_id=""):
     """Make a request for an endpoint & endpoint_id.
         A generalized api request funtion"""
-        
+
     url = f"https://api-2445582011268.apicast.io/{endpoint}/{endpoint_id}"
     return api_request(url)
-
-
-
-def get_game_info(key="name", value=""):
-    """Returns all game information for game given the key & value in the game dict"""
-    return games.find_one({key : value})
