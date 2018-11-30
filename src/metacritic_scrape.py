@@ -17,15 +17,16 @@ def clean_title(game=""):
 
     return game
 
-def scrape_game_page(platform="playstation-4", title=""):
+def scrape_game_page(title="", browser=None, platform="playstation-4"):
     """Returns list of  all users who reviewed a game,
     #and a list of scores for the game"""
-    browser = Firefox()
+    if browser is None:
+        browser = Firefox()
 
     game_title=clean_title(game=title)
 
     users=[]
-    #scores_dict={}
+    scores_dict={}
 
     for i in range(100):
         url= f"https://www.metacritic.com/game/{platform}/{game_title}/user-reviews?page={i}"
@@ -35,12 +36,12 @@ def scrape_game_page(platform="playstation-4", title=""):
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
             users.append(split[0])
-            #scores_dict[split[0]]=int(split[2])
+            scores_dict[split[0]]=int(split[2])
 
         if len(reviews)==0:
             break
 
-    return  users
+    return  scores_dict, users
 
 def scrape_user_page(username=""):
     "Returns list of all games a user has reviewed, and what score they gave the game"
