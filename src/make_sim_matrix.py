@@ -12,10 +12,14 @@ def get_all_users(db=games):
     users=[]
     games_dict={}
     df = pd.DataFrame(list(db.find()))
+    df = df.drop(df[df.category == 3].index)
+    df = df.drop(df[df.category==2].index)
+    df = df.drop(df[df.category==1].index)
+    df = (df[df.version_parent.isnull()])
 
     game_titles = list(df.name)
     browser=Firefox()
-    for game in game_titles[:50]:
+    for game in game_titles:
         games_dict[game], game_users = scrape_game_page(title=game, browser=browser)
 
         for user in game_users:
