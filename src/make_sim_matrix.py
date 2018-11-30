@@ -1,6 +1,7 @@
 import pandas as pd
 import pymongo
 from .metacritic_scrape import scrape_game_page
+from .pandas_functions import clean_df
 from selenium.webdriver import Firefox
 
 mc = pymongo.MongoClient()
@@ -11,11 +12,10 @@ games = db['games']
 def get_all_users(db=games):
     users=[]
     games_dict={}
+
     df = pd.DataFrame(list(db.find()))
-    df = df.drop(df[df.category == 3].index)
-    df = df.drop(df[df.category==2].index)
-    df = df.drop(df[df.category==1].index)
-    df = (df[df.version_parent.isnull()])
+    df =clean_df(df=df)
+
 
     game_titles = list(df.name)
     browser=Firefox()
