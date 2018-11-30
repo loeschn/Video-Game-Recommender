@@ -1,4 +1,4 @@
-import pandas as import pd
+import pandas as pd
 
 def clean_df(df):
     """Dropping columns to avoid games that are very similar:
