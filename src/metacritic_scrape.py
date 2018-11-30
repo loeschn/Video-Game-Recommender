@@ -25,7 +25,7 @@ def scrape_game_page(title="", browser=None, platform="playstation-4"):
 
     game_title=clean_title(game=title)
 
-    users=[]
+    #users=[]
     scores_dict={}
 
     for i in range(100):
@@ -35,13 +35,13 @@ def scrape_game_page(title="", browser=None, platform="playstation-4"):
 
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
-            users.append(split[0])
+            #users.append(split[0])
             scores_dict[split[0]]=int(split[2])
 
         if len(reviews)==0:
             break
 
-    return  scores_dict, users
+    return  scores_dict#, users
 
 def scrape_user_page(username=""):
     "Returns list of all games a user has reviewed, and what score they gave the game"
