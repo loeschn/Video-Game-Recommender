@@ -1,6 +1,7 @@
 import pymongo
 import pandas as pd
 import numpy as np
+from .pandas_functions import clean_df
 
 mc = pymongo.MongoClient()
 db = mc['ps4_game_data']
@@ -30,7 +31,7 @@ def is_val_in_col(column, i):
         return 0
 
 
-def clean_df(db=games):
+def make_similarity_df(db=games):
     df = pd.DataFrame(list(db.find()))
 
     useful_columns = [ 'player_perspectives',
@@ -47,16 +48,7 @@ def clean_df(db=games):
         for i in make_id_list(df[column]):
             df[f'{column}_{i}'] = df[column].apply(lambda col: is_val_in_col(col, i))
 
-    """Dropping columns to avoid games that are very similar:
-    Category = 1 = DLC/Add-On
-    Category = 2 = Expansion
-    Category = 3 = Bundle
-    Dropping any game that has a parent version:
-    i.e. Overwatch Legendary Edition vs just plain Overwatch"""
-    df = df.drop(df[df.category == 3].index)
-    df = df.drop(df[df.category==2].index)
-    df = df.drop(df[df.category==1].index)
-    df = (df[df.version_parent.isnull()])
+    df = clean_df(df=df)
 
     """Making a similarity dataframe with only the dummy columns & the name"""
     similarity_df = df.iloc[:,53:]
@@ -68,7 +60,7 @@ def clean_df(db=games):
 
 def find_most_similar(title="", db=games):
 
-    similarity_df = clean_df(db=games)
+    similarity_df = make_similarity_df(db=games)
     sim_matrix = (similarity_df.values)[:,:-1]
 
     target = (similarity_df[similarity_df.name == title].values)[0]
