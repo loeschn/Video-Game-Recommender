@@ -4,21 +4,37 @@ from selenium.webdriver import Firefox
 def clean_title(title=""):
     """cleaning the title of the game as given from the mongodb,
         to something compatibible for metacritic"""
-    empty=[':', ";", ".", ",", "'", "@", "*", "#", "!", "/"]
-    space=["&", "_"]
+    empty=[':', ";", ".", ",", "'", "@", "*", "#", "/", "＠"]
+    space=["&", "_", " - ", " "]
 
     title=title.lower()
-
+"""This is all cleaning for specific games I found problematic formatting into a metacritic url
+    I'm commenting this out for now but will probably not use it going forward
+    
     title=title.replace("\ufeff", "")
-
+    title=title.replace("Final Fantasy XIV: A Realm Reborn", "final-fantasy-xiv-online-a-realm-reborn")
+    title=title.replace("Warriors 8", "warriors-8-empires")
+    title=title.replace("Guilty Gear Xrd", "guilty-gear-xrd--sign-")
+    title=title.replace("Runner2", "bittrip-presentsrunner2")
+    title=title.replace("All Points Bulletin", "APB")
+    title=title.replace("Radial-G : Racing Revolved", "radial-g-racing-revolved")
+    title=title.replace(" : ", "-")
+    title=title.replace("Û", "u")
+    title=title.replace("Oddworld: New 'n' Tasty", "oddworld-abes-oddysee---new-n-tasty")
+    title=title.replace("2+", "2-+")
+    title=title.replace(" - V", "---v")
+    title=title.replace(" FIA World Rally Championship", "")
+    title=title.replace("ö", "o")
+    title=title.replace("Yorbie - Episode 1: Payback's A Bolt", "yorbie---episode-one-paybacks-a-bolt")
+    title=title.replace("Everybody's Tennis", "hot-shots-tennis")
+    title=title.replace("Score Edition", "edition")
+    title=title.replace("the Flood", "the-flood-complete-edition")
+"""
     for element in empty:
         title=title.replace(element, "")
 
     for element in space:
-        title=title.replace(element, " ")
-
-    title=title.replace(" - ", "-")
-    title=title.replace(" ", "-")
+        title=title.replace(element, "-")
 
     return title
 
