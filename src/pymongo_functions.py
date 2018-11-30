@@ -32,20 +32,9 @@ def scrape_page(url, coll=raw_html_coll):
     if html:
         return html
     browser.get(url)
+    time.sleep(5 + random.random() * 10)  # Wait 5-15 seconds
     if browser.title.startswith('404'):
         return None
     html = browser.page_source
     store_html(url=url, html=html, coll=coll)
     return html
-
-
-
-
-
-
-
-
-
-
-
-    
