@@ -1,5 +1,8 @@
 import requests
 from selenium.webdriver import Firefox
+from .pymongo_functions import scrape_page
+from bs4 import BeautifulSoup
+
 
 def clean_title(game=""):
     """cleaning the title of the game as given from the mongodb,
@@ -17,31 +20,30 @@ def clean_title(game=""):
 
     return game
 
+
 def scrape_game_page(title="", browser=None, platform="playstation-4"):
-    """Returns list of  all users who reviewed a game,
-    #and a list of scores for the game"""
+    """Returns a dictionary for a game in the form:
+        game_title[username]=user_score"""
     if browser is None:
         browser = Firefox()
 
     game_title=clean_title(game=title)
-
-    #users=[]
     scores_dict={}
 
     for i in range(100):
         url= f"https://www.metacritic.com/game/{platform}/{game_title}/user-reviews?page={i}"
-        browser.get(url)
-        reviews = browser.find_elements_by_css_selector('li.user_review')
+        html = scrape_page(url=url)
+        soup=BeautifulSoup(html, 'html.parser')
+        reviews = soup.select('li.user_review')
 
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
-            #users.append(split[0])
             scores_dict[split[0]]=int(split[2])
 
         if len(reviews)==0:
             break
 
-    return  scores_dict#, users
+    return  scores_dict
 
 def scrape_user_page(username=""):
     "Returns list of all games a user has reviewed, and what score they gave the game"
@@ -50,8 +52,9 @@ def scrape_user_page(username=""):
 
     for i in range(100):
         url= f"https://www.metacritic.com/user/{username}?page={i}"
-        browser.get(url)
-        reviews = browser.find_elements_by_css_selector('li.user_review')
+        html = scrape_page(url=url)
+        soup=BeautifulSoup(html, 'html.parser')
+        reviews = soup.select('li.user_review')
 
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
