@@ -32,13 +32,13 @@ def scrape_game_page(title="", browser=None, platform="playstation-4"):
 
     for i in range(100):
         url= f"https://www.metacritic.com/game/{platform}/{game_title}/user-reviews?page={i}"
-        html = scrape_page(url=url)
+        html = scrape_page(url=url, browser=browser)
         soup=BeautifulSoup(html, 'html.parser')
         reviews = soup.select('li.user_review')
 
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
-            scores_dict[split[0]]=int(split[2])
+            scores_dict[split[7]]=int(split[12])
 
         if len(reviews)==0:
             break
@@ -58,7 +58,7 @@ def scrape_user_page(username=""):
 
         for i in range(len(reviews)):
             split = (reviews[i].text).split('\n')
-            title_dict[split[0]] = int(split[3])
+            title_dict[split[7]] = int(split[12])
 
         if len(reviews)==0:
             break
