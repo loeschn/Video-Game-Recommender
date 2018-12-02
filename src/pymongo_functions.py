@@ -6,9 +6,8 @@ from selenium.webdriver import Firefox
 
 mc = pymongo.MongoClient()
 db = mc['game_recommender']
-games = db['games']
+#games = db['games']
 raw_html_coll = db['raw_html']
-
 
 def get_game_info(key="name", value=""):
     """Returns all game information for game given the key & value in the game dict"""
@@ -28,11 +27,12 @@ def retrieve_html(url, coll=raw_html_coll):
         return None
 
 
-def scrape_page(url, coll=raw_html_coll, browser=Firefox()):
+def scrape_page(url, coll=raw_html_coll, browser=None):
     html = retrieve_html(url=url, coll=coll)
     if html:
         return html
-
+    if browser is None:
+        browser=Firefox()
     browser.get(url)
     time.sleep(5 + random.random() * 10)  # Wait 5-15 seconds
     if browser.title.startswith('404'):
