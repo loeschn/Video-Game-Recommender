@@ -8,10 +8,16 @@ import time
 
 mc = pymongo.MongoClient()
 db =mc['game_recommender']
+game_dict=db['game_dict']
+
 omc=pymongo.MongoClient()
 cb = omc['ps4_game_data']
 games = cb['games']
 
+def flatten_game_dict(game_dict):
+    for (game_id, user_score_dict) in game_dict.items():
+        for (user_id, score) in user_score_dict.items():
+            yield {'game_id': game_id, 'user_id': user_id, 'score': score}
 
 def get_all_users(db=games):
     games_dict={}
@@ -24,5 +30,5 @@ def get_all_users(db=games):
     browser=Firefox()
     for game in game_titles:
         games_dict[game] = scrape_game_page(title=game, browser=browser)
-        
+
     return games_dict
