@@ -8,7 +8,7 @@ import time
 
 mc = pymongo.MongoClient()
 db =mc['game_recommender']
-game_dict=db['game_dict']
+reviews_coll = db['reviews']
 
 omc=pymongo.MongoClient()
 cb = omc['ps4_game_data']
@@ -29,6 +29,14 @@ def get_all_users(db=games):
     game_titles = list(df.name)
     browser=Firefox()
     for game in game_titles:
+        if scrape_game_page(title=game, browser=browser)=={}:
+            break
         games_dict[game] = scrape_game_page(title=game, browser=browser)
+    flattened=flatten_game_dict(game_dict=games_dict)
+    for review in flattened:
+        reviews_coll.insert_one(review)
 
-    return games_dict
+def make_preference_df(db=reviews_coll):
+    df=pd.Dataframe(list(db.find()))
+    df=df.pivot(index='username', columns='game_id', values='score' )
+    return df
