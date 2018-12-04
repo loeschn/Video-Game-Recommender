@@ -19,7 +19,7 @@ def flatten_game_dict(game_dict):
         for (user_id, score) in user_score_dict.items():
             yield {'game_id': game_id, 'user_id': user_id, 'score': score}
 
-def get_all_users(db=games):
+def store_all_users(db=games):
     games_dict={}
 
     df = pd.DataFrame(list(db.find()))
