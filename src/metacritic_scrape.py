@@ -33,6 +33,8 @@ def scrape_game_page(title="", browser=None, platform="playstation-4"):
     for i in range(100):
         url= f"https://www.metacritic.com/game/{platform}/{game_title}/user-reviews?page={i}"
         html = scrape_page(url=url, browser=browser)
+        if html is None:
+            return None
         soup=BeautifulSoup(html, 'html.parser')
         reviews = soup.select('li.user_review')
 
