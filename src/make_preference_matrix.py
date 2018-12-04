@@ -30,8 +30,9 @@ def get_all_users(db=games):
     browser=Firefox()
     for game in game_titles:
         if scrape_game_page(title=game, browser=browser)=={}:
-            break
+            continue
         games_dict[game] = scrape_game_page(title=game, browser=browser)
+
     flattened=flatten_game_dict(game_dict=games_dict)
     for review in flattened:
         reviews_coll.insert_one(review)
