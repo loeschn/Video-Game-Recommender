@@ -1,14 +1,22 @@
-import requests
 from selenium.webdriver import Firefox
 from .pymongo_functions import scrape_page
 from bs4 import BeautifulSoup
+import pymongo
 
+mc = MongoClient()
+db = mc['game_recommender']
+games_coll = db['games']
+
+def store_game_title(title, games_coll=games_coll):
+    """Add a new title to the games collection."""
+    if games_coll.count_documents({'title': title}) == 0:
+        games_coll.insert_one({'title': title})
 
 def clean_title(game=""):
     """cleaning the title of the game as given from the mongodb,
         to something compatibible for metacritic"""
     empty=[':', ";", ".", ",", "'", "@", "*", "#", "/", "＠"]
-    space=["&", "_", " - ", " "]
+    space=["&", "_", " "]
 
     game=game.lower()
 
@@ -19,6 +27,20 @@ def clean_title(game=""):
         game=game.replace(element, "-")
 
     return game
+
+def make_game_db(platform='ps4', browser=None):
+    if browser is None:
+        browser = Firefox()
+    game_titles=[]
+    max_pages=9
+    for i in range(max_pages):
+        url=f'https://www.metacritic.com/browse/games/release-date/available/{platform}/metascore?page={i}'
+        html=scrape_page(url=url, browser=browser)
+        soup=BeautifulSoup(html, 'html.parser')
+        titles=soup.select('div.basic_stat.product_title')
+        for title in titles:
+            store_game_title(title=title)
+
 
 
 def scrape_game_page(title="", browser=None, platform="playstation-4"):
