@@ -31,7 +31,6 @@ def clean_title(game=""):
 def make_game_db(platform='ps4', browser=None):
     if browser is None:
         browser = Firefox()
-    game_titles=[]
     max_pages=9
     for i in range(max_pages):
         url=f'https://www.metacritic.com/browse/games/release-date/available/{platform}/metascore?page={i}'
@@ -39,7 +38,7 @@ def make_game_db(platform='ps4', browser=None):
         soup=BeautifulSoup(html, 'html.parser')
         titles=soup.select('div.basic_stat.product_title')
         for title in titles:
-            store_game_title(title=title)
+            store_game_title(title=title.text)
 
 
 
