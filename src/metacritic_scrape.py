@@ -3,7 +3,7 @@ from .pymongo_functions import scrape_page
 from bs4 import BeautifulSoup
 import pymongo
 
-mc = MongoClient()
+mc = pymongo.MongoClient()
 db = mc['game_recommender']
 games_coll = db['games']
 
