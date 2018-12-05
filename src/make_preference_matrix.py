@@ -38,6 +38,6 @@ def store_all_users(db=games):
         reviews_coll.insert_one(review)
 
 def make_preference_df(db=reviews_coll):
-    df=pd.Dataframe(list(db.find()))
+    df=pd.DataFrame(list(db.find()))
     df=df.pivot(index='username', columns='game_id', values='score' )
     return df
