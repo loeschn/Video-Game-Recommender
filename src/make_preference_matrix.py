@@ -32,9 +32,10 @@ def store_all_users(db=games):
     game_titles = list(df.title)
     browser=Firefox()
     for game in game_titles:
-        if scrape_game_page(title=game, browser=browser)=={}:
+        result= scrape_game_page(title=game, browser=browser)
+        if not result:
             continue
-        games_dict[game] = scrape_game_page(title=game, browser=browser)
+        games_dict[game] = result
 
     flattened=flatten_game_dict(game_dict=games_dict)
     for review in flattened:
