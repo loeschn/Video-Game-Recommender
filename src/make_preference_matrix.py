@@ -38,12 +38,27 @@ def store_all_users(db=games):
 
     flattened=flatten_game_dict(game_dict=games_dict)
     for review in flattened:
-        if reviews_coll.count_documents({'title': title}) == 0:
+        game_id = review['game_id']
+        user_id = review['user_id']
+        if reviews_coll.count_documents({'game_id': game_id,
+                                         'user_id': user_id}) == 0:
             reviews_coll.insert_one(review)
 
-def make_preference_df(db=reviews):
+def make_preference_df(db=reviews_coll):
     """Go from all entries in reviews collection, to pandas dataframe, then pivot it to make
     preference matrix"""
     df=pd.DataFrame(list(db.find()))
-    df=df.pivot(index='user_id', columns='game_id', values='score' )
+
+    """Set of unique user & game IDs"""
+    users=set(df['user_id'])
+    games=set(df['game_id'])
+
+    """Zipping a number to each unique user & game ID"""
+    game_id_lookup = dict(zip(games, range(len(games))))
+    user_id_lookup = dict(zip(users, range(len(users))))
+
+    df['game_number']=df['game_id'].apply(game_id_lookup.get)
+    df['user_number']=df['username'].apply(user_id_lookup.get)
+
+    df=df.pivot(index='user_number', columns='game_number', values='score' )
     return df
