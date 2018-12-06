@@ -6,8 +6,11 @@ from selenium.webdriver import Firefox
 
 mc = pymongo.MongoClient()
 db = mc['game_recommender']
-#games = db['games']
 raw_html_coll = db['raw_html']
+
+amc=pymongo.MongoClient()
+cb=amc['ps4_game_data']
+games=cb['games']
 
 def get_game_info(key="name", value=""):
     """Returns all game information for game given the key & value in the game dict"""
@@ -28,6 +31,8 @@ def retrieve_html(url, coll=raw_html_coll):
 
 
 def scrape_page(url, coll=raw_html_coll, browser=None):
+    """Scrapes URL & stores raw HTML if it doesn't already exist in raw_html collection,
+        returns HTML at end of function"""
     html = retrieve_html(url=url, coll=coll)
     if html:
         return html
