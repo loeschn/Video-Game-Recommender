@@ -8,7 +8,7 @@ import time
 
 mc = pymongo.MongoClient()
 db =mc['game_recommender']
-reviews = db['reviews']
+reviews_coll = db['reviews']
 games=db['games']
 
 #omc=pymongo.MongoClient()
@@ -38,8 +38,8 @@ def store_all_users(db=games):
 
     flattened=flatten_game_dict(game_dict=games_dict)
     for review in flattened:
-        if reviews.count_documents({'title': title}) == 0:
-            reviews.insert_one(review)
+        if reviews_coll.count_documents({'title': title}) == 0:
+            reviews_coll.insert_one(review)
 
 def make_preference_df(db=reviews):
     """Go from all entries in reviews collection, to pandas dataframe, then pivot it to make
