@@ -15,7 +15,7 @@ def store_game_title(title, games_coll=games_coll):
 def clean_title(game=""):
     """cleaning the title of the game to something compatibible for metacritic URL"""
     empty=[':', ";", ".", ",", "'", "@", "*", "#", "/", "＠"]
-    space=["_", " ", " & "]
+    space=[" & ", "_", " "]
 
     game=game.lower()
 
