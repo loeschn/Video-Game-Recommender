@@ -16,16 +16,18 @@ games=db['games']
 #games = cb['games']
 
 def flatten_game_dict(game_dict):
+    """Take a dictionary of dictionaries & flatten it"""
     for (game_id, user_score_dict) in game_dict.items():
         for (user_id, score) in user_score_dict.items():
             yield {'game_id': game_id, 'user_id': user_id, 'score': score}
 
 def store_all_users(db=games):
+    """Take raw_html from a game's user review page, and store the game, username, & score
+    as an entry in reviews collection"""
     games_dict={}
 
     df = pd.DataFrame(list(db.find()))
     #df =clean_df(df=df)
-
 
     game_titles = list(df.title)
     browser=Firefox()
@@ -40,6 +42,8 @@ def store_all_users(db=games):
             reviews.insert_one(review)
 
 def make_preference_df(db=reviews):
+    """Go from all entries in reviews collection, to pandas dataframe, then pivot it to make
+    preference matrix"""
     df=pd.DataFrame(list(db.find()))
     df=df.pivot(index='user_id', columns='game_id', values='score' )
     return df
