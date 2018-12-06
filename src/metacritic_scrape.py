@@ -13,8 +13,7 @@ def store_game_title(title, games_coll=games_coll):
         games_coll.insert_one({'title': title})
 
 def clean_title(game=""):
-    """cleaning the title of the game as given from the mongodb,
-        to something compatibible for metacritic"""
+    """cleaning the title of the game to something compatibible for metacritic URL"""
     empty=[':', ";", ".", ",", "'", "@", "*", "#", "/", "＠"]
     space=["&", "_", " "]
 
@@ -29,6 +28,7 @@ def clean_title(game=""):
     return game
 
 def make_game_db(platform='ps4', browser=None):
+    """Scrape platform game page for all titles on metacritic"""
     if browser is None:
         browser = Firefox()
     max_pages=9
