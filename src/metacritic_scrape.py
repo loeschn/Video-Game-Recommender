@@ -37,8 +37,10 @@ def make_game_db(platform='ps4', browser=None):
         html=scrape_page(url=url, browser=browser)
         soup=BeautifulSoup(html, 'html.parser')
         titles=soup.select('div.basic_stat.product_title')
-        for title in titles:
-            store_game_title(title=title.text)
+        for game in titles:
+            plain=game.text
+            title= (" ".join(plain.split()))
+            store_game_title(title=title)
 
 
 
