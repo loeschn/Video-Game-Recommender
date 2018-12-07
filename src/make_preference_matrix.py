@@ -62,6 +62,6 @@ def make_preference_df(db=reviews_coll):
 
     df['game_number']=df['game_id'].apply(game_id_lookup.get)
     df['user_number']=df['user_id'].apply(user_id_lookup.get)
-
-    df=df.pivot(index='user_number', columns='game_number', values='score' )
+    
+    #df=df.pivot(index='user_number', columns='game_number', values='score' )
     return df
