@@ -83,4 +83,4 @@ def find_most_similar(title="", db=games):
 
     idx =  np.argsort(-(np.array(jaccard_scores)))[1:6]
 
-    return similarity_df.iloc[idx,:]['name']
+    return list(similarity_df.iloc[idx,:]['name'])
