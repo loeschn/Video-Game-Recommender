@@ -37,6 +37,8 @@ def make_prefernce_vector(prefs={}):
 
     return np.array(new_factor_list)
 
+
+
 def give_recommendation(prefs={}):
     """Returns the top 5 games with highest predicted score"""
 
@@ -50,4 +52,4 @@ def give_recommendation(prefs={}):
     for ind in predicted_scores.argsort()[-5:][::-1]:
         best.append(df[df['game_number']==ind]['game_id'].unique()[0])
 
-    return best, 
+    return best
