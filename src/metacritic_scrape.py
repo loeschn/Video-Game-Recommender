@@ -31,7 +31,7 @@ def make_game_db(platform='ps4', browser=None):
     """Scrape platform game page for all titles on metacritic"""
     if browser is None:
         browser = Firefox()
-    max_pages=9
+    max_pages=4
     for i in range(max_pages):
         url=f'https://www.metacritic.com/browse/games/release-date/available/{platform}/metascore?page={i}'
         html=scrape_page(url=url, browser=browser)
@@ -44,7 +44,7 @@ def make_game_db(platform='ps4', browser=None):
 
 
 
-def scrape_game_page(title="", browser=None, platform="playstation-4"):
+def scrape_game_page(title="", browser=None, platform="switch"):
     """Returns a dictionary for a game in the form:
         game_title[username]=user_score"""
     if browser is None:
