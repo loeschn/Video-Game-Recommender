@@ -48,8 +48,7 @@ def store_all_users(db=games):
             reviews_coll.insert_one(review)
 
 def make_preference_df(db=reviews_coll):
-    """Go from all entries in reviews collection, to pandas dataframe, then pivot it to make
-    preference matrix"""
+    """Go from all entries in reviews collection, to pandas dataframe"""
     df=pd.DataFrame(list(db.find()))
 
     """Set of unique user & game IDs"""
@@ -62,6 +61,6 @@ def make_preference_df(db=reviews_coll):
 
     df['game_number']=df['game_id'].apply(game_id_lookup.get)
     df['user_number']=df['user_id'].apply(user_id_lookup.get)
-    
+
     #df=df.pivot(index='user_number', columns='game_number', values='score' )
     return df
