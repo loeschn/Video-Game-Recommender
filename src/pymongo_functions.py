@@ -8,13 +8,16 @@ mc = pymongo.MongoClient()
 db = mc['game_recommender']
 raw_html_coll = db['raw_html']
 
-#amc=pymongo.MongoClient()
-#cb=amc['ps4_game_data']
-#games=cb['games']
+amc=pymongo.MongoClient()
+cb=amc['ps4_game_data']
+games=cb['games']
 
 def get_game_info(key="name", value=""):
     """Returns all game information for game given the key & value in the game dict"""
     return games.find_one({key : value})
+
+
+
 
 def store_html(url, html, coll=raw_html_coll):
     """"Store raw HTML in MongoDB"""
