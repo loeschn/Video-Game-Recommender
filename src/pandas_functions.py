@@ -47,7 +47,8 @@ def make_similarity_df(db=games):
     useful_columns = [ 'player_perspectives',
                         'game_modes',
                         'themes',
-                        'genres']
+                        'genres',
+                        'keywords']
 
     """Filling in the nans"""
     for col in useful_columns:
