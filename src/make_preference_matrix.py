@@ -21,12 +21,12 @@ def flatten_game_dict(game_dict):
         for (user_id, score) in user_score_dict.items():
             yield {'game_id': game_id, 'user_id': user_id, 'score': score}
 
-def store_all_users(db=games):
+def store_all_users(coll=games):
     """Take raw_html from a game's user review page, and store the game, username, & score
     as an entry in reviews collection"""
     games_dict={}
 
-    df = pd.DataFrame(list(db.find()))
+    df = pd.DataFrame(list(coll.find()))
     #df =clean_df(df=df)
 
     game_titles = list(df.title)
