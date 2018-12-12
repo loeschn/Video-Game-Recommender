@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.recommendation.ALSModel","timestamp":1544645881970,"sparkVersion":"2.3.2","uid":"ALS_477c83c18ec626356656","paramMap":{"itemCol":"game_number","coldStartStrategy":"drop","userCol":"user_number","predictionCol":"prediction"},"rank":100}
