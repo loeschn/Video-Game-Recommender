@@ -25,21 +25,22 @@ def store_all_users(coll=games):
     """Take raw_html from a game's user review page, and store the game, username, & score
     as an entry in reviews collection"""
     games_dict={}
-
+    print('loading collection')
     df = pd.DataFrame(list(coll.find()))
     #df =clean_df(df=df)
 
     game_titles = list(df.title)
     browser=Firefox()
+    print('making games dict')
     for game in game_titles:
         result= scrape_game_page(title=game, browser=browser)
         if not result:
             continue
         games_dict[game] = result
-
+    print('finding existing reviews')
     existing_game_reviews=set((r['game_id'], r['user_id'])
                                 for r in reviews_coll.find())
-
+    print('flattening')
     flattened=flatten_game_dict(game_dict=games_dict)
     for review in flattened:
         game_id = review['game_id']
@@ -47,9 +48,9 @@ def store_all_users(coll=games):
         if (game_id, user_id) not in existing_game_reviews:
             reviews_coll.insert_one(review)
 
-def make_preference_df(db=reviews_coll):
+def make_preference_df(coll=reviews_coll):
     """Go from all entries in reviews collection, to pandas dataframe"""
-    df=pd.DataFrame(list(db.find()))
+    df=pd.DataFrame(list(coll.find()))
 
     """Set of unique user & game IDs"""
     users=set(df['user_id'])
