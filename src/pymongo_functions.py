@@ -7,6 +7,7 @@ from selenium.webdriver import Firefox
 mc = pymongo.MongoClient()
 db = mc['game_recommender']
 raw_html_coll = db['raw_html']
+raw_html_dict = {row['url']: row['html'] for row in raw_html_coll.find()}
 
 amc=pymongo.MongoClient()
 cb=amc['ps4_game_data']
@@ -23,9 +24,12 @@ def store_html(url, html, coll=raw_html_coll):
     """"Store raw HTML in MongoDB"""
     coll.delete_many({'url': url})
     coll.insert_one({'url': url, 'html': html})
+    raw_html_dict['url'] = html
 
 def retrieve_html(url, coll=raw_html_coll):
     """Retrieve page source for a URL from MongoDB"""
+    if url in raw_html_dict:
+        return raw_html_dict[url]
     retrieved_data = coll.find_one({'url': url})
     if retrieved_data:
         return retrieved_data.get('html')
