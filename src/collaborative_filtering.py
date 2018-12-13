@@ -37,6 +37,16 @@ def make_prefernce_vector(prefs={}):
 
     return np.array(new_factor_list)
 
+def make_dict():
+    d={}
+    game=input("Game title: ")
+    score=input("Score: ")
+    while score and game:
+        d[game]=int(score)
+        game=input("Game title: ")
+        score=input("Score: ")
+
+    return d
 
 
 def give_recommendation(prefs={}):
