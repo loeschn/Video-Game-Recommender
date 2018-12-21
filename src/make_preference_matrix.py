@@ -56,12 +56,23 @@ def make_preference_df(coll=reviews_coll):
     users=set(df['user_id'])
     games=set(df['game_id'])
 
-    """Zipping a number to each unique user & game ID"""
+    """Zipping a number to each unique user & game ID aka actually making IDs"""
     game_id_lookup = dict(zip(games, range(len(games))))
     user_id_lookup = dict(zip(users, range(len(users))))
 
     df['game_number']=df['game_id'].apply(game_id_lookup.get)
     df['user_number']=df['user_id'].apply(user_id_lookup.get)
+
+    """Creating columns that have the count of reviews a user has given
+    & reviews a game has recieved"""
+    user_group_df = pd.DataFrame(df.groupby('user_id').size(),
+                              columns=['num_username_reviews'])
+
+    game_group_df = pd.DataFrame(df.groupby('game_id').size(),
+                              columns=['num_game_reviews'])
+
+    df = df.join(user_group_df, on='user_id')
+    df = df.join(game_group_df, on='game_id')
 
     #df=df.pivot(index='user_number', columns='game_number', values='score' )
     return df
