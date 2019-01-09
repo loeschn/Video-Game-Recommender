@@ -1,10 +1,19 @@
 import pandas as pd
 import numpy as np
 from src.make_preference_matrix import make_preference_df
+import pymongo
+from fuzzywuzzy import process
+
+mc = pymongo.MongoClient()
+db =mc['game_recommender']
+games=db['games']
+
 
 
 df=make_preference_df()
-item_arr=np.load('item_arr.npy')
+item_arr=np.load('filtered_item_arr.npy')
+
+game_titles = list(df.game_id.unique())
 
 def get_game_ids(prefs={}):
     """Returns a list of the game IDs given the game title"""
@@ -40,10 +49,16 @@ def make_prefernce_vector(prefs={}):
 def make_dict():
     d={}
     game=input("Game title: ")
+    correct_title = process.extractOne(game, game_titles)[0]
+    #if not games.find_one({'title': game}):
+    #    return "Error: game not in database"
     score=input("Score: ")
     while score and game:
-        d[game]=int(score)
+        d[correct_title]=int(score)
         game=input("Game title: ")
+        correct_title = process.extractOne(game, game_titles)[0]
+        #if not games.find_one({'title': game}):
+        #    break
         score=input("Score: ")
 
     return d
