@@ -52,17 +52,6 @@ def make_preference_df(coll=reviews_coll):
     """Go from all entries in reviews collection, to pandas dataframe"""
     df=pd.DataFrame(list(coll.find()))
 
-    """Set of unique user & game IDs"""
-    users=set(df['user_id'])
-    games=set(df['game_id'])
-
-    """Zipping a number to each unique user & game ID aka actually making IDs"""
-    game_id_lookup = dict(zip(games, range(len(games))))
-    user_id_lookup = dict(zip(users, range(len(users))))
-
-    df['game_number']=df['game_id'].apply(game_id_lookup.get)
-    df['user_number']=df['user_id'].apply(user_id_lookup.get)
-
     """Creating columns that have the count of reviews a user has given
     & reviews a game has recieved"""
     user_group_df = pd.DataFrame(df.groupby('user_id').size(),
@@ -74,5 +63,19 @@ def make_preference_df(coll=reviews_coll):
     df = df.join(user_group_df, on='user_id')
     df = df.join(game_group_df, on='game_id')
 
+    """Filtering out all users who gave less than 17 reviews,
+    determined by evaluating RMSE in Pyspark_ALS.ipynb"""
+    df = df[df.num_username_reviews>=17]
+
+    """Set of unique user & game IDs"""
+    users=set(df['user_id'])
+    games=set(df['game_id'])
+
+    """Zipping a number to each unique user & game ID aka actually making IDs"""
+    game_id_lookup = dict(zip(games, range(len(games))))
+    user_id_lookup = dict(zip(users, range(len(users))))
+
+    df['game_number']=df['game_id'].apply(game_id_lookup.get)
+    df['user_number']=df['user_id'].apply(user_id_lookup.get)
     #df=df.pivot(index='user_number', columns='game_number', values='score' )
     return df
