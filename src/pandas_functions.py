@@ -1,6 +1,7 @@
 import pymongo
 import pandas as pd
 import numpy as np
+from fuzzywuzzy import process
 
 mc = pymongo.MongoClient()
 db = mc['ps4_game_data']
@@ -71,10 +72,16 @@ def make_similarity_df(db=games):
 
 def find_most_similar(title="", db=games):
     """Using Jaccard-Similarity Score between the target title and all other titles in the similarity matrixself."""
+    #if not games.find_one({'name': title}):
+    #    return "Error: game not in database"
+
     similarity_df = make_similarity_df(db=games)
     sim_matrix = (similarity_df.values)[:,:-1]
 
-    target = (similarity_df[similarity_df.name == title].values)[0]
+    game_titles = list(similarity_df.name)
+    correct_title = process.extractOne(title, game_titles)[0]
+
+    target = (similarity_df[similarity_df.name == correct_title].values)[0]
     jaccard_scores=[]
 
     for i in range(len(sim_matrix)):
